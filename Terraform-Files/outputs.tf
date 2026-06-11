@@ -27,3 +27,8 @@ output "sonarqube_url" {
   description = "SonarQube URL"
   value       = "http://${aws_eip.jenkins.public_ip}:9000"
 }
+
+output "ecr_repository_urls" {
+  description = "ECR repository URLs keyed by service name"
+  value       = { for k, v in aws_ecr_repository.services : k => v.repository_url }
+}
