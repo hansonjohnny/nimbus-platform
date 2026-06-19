@@ -145,3 +145,65 @@ resource "aws_security_group" "jenkins" {
     Environment = var.environment
   }
 }
+
+
+# ─────────────────────────────────────────
+# SECURITY GROUP — RDS POSTGRESQL
+# ─────────────────────────────────────────
+resource "aws_security_group" "rds" {
+  name        = "${var.project_name}-rds-sg"
+  description = "Allow PostgreSQL access from EKS worker nodes only"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [aws_security_group.eks_nodes_sg.id]
+    description     = "PostgreSQL from EKS nodes"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all outbound"
+  }
+
+  tags = {
+    Name        = "${var.project_name}-rds-sg"
+    Environment = var.environment
+  }
+}
+
+
+# ─────────────────────────────────────────
+# SECURITY GROUP — ELASTICACHE REDIS
+# ─────────────────────────────────────────
+resource "aws_security_group" "redis" {
+  name        = "${var.project_name}-redis-sg"
+  description = "Allow Redis access from EKS worker nodes only"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port       = 6379
+    to_port         = 6379
+    protocol        = "tcp"
+    security_groups = [aws_security_group.eks_nodes_sg.id]
+    description     = "Redis from EKS nodes"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all outbound"
+  }
+
+  tags = {
+    Name        = "${var.project_name}-redis-sg"
+    Environment = var.environment
+  }
+}
