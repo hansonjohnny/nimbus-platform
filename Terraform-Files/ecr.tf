@@ -38,7 +38,7 @@ resource "aws_ecr_repository" "services" {
 
 # ─────────────────────────────────────────
 # LIFECYCLE POLICY
-# Keep the last 10 tagged images per repo
+# Keep the last 5 tagged images per repo
 # to avoid unbounded storage growth.
 # ─────────────────────────────────────────
 
@@ -50,12 +50,12 @@ resource "aws_ecr_lifecycle_policy" "services" {
     rules = [
       {
         rulePriority = 1
-        description  = "Keep last 10 tagged images"
+        description  = "Keep last 5 tagged images"
         selection = {
           tagStatus     = "tagged"
           tagPrefixList = ["v"]
           countType     = "imageCountMoreThan"
-          countNumber   = 10
+          countNumber   = 5
         }
         action = {
           type = "expire"
