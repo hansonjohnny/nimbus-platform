@@ -60,4 +60,30 @@ variable "jenkins_ssh_cidr" {
   default     = "0.0.0.0/0"
 }
 
+# ── RDS ───────────────────────────────────
+variable "db_instance_class" {
+  description = "RDS instance class"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "db_name" {
+  description = "Initial database name"
+  type        = string
+  default     = "nimbus"
+}
+
+variable "db_username" {
+  description = "Master username for RDS"
+  type        = string
+  default     = "nimbus_admin"
+}
+
+# ── ElastiCache ───────────────────────────
+variable "redis_node_type" {
+  description = "ElastiCache node type for Redis"
+  type        = string
+  default     = "cache.t3.micro"
+}
+
 
