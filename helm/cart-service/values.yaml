@@ -1,0 +1,26 @@
+replicaCount: 1
+
+image:
+  repository: 943378954775.dkr.ecr.us-east-2.amazonaws.com/nimbus-retail/cart-service
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3003
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+
+logLevel: info

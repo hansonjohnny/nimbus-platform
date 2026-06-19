@@ -52,3 +52,8 @@ output "redis_endpoint" {
   description = "ElastiCache Redis endpoint (host:port)"
   value       = "${aws_elasticache_cluster.redis.cache_nodes[0].address}:${aws_elasticache_cluster.redis.port}"
 }
+
+output "jenkins_public_ip" {
+  description = "Jenkins EC2 public IP (Elastic IP)"
+  value       = aws_eip.jenkins.public_ip
+}

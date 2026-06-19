@@ -1,0 +1,29 @@
+replicaCount: 1
+
+image:
+  repository: 943378954775.dkr.ecr.us-east-2.amazonaws.com/nimbus-retail/notification-service
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3005   # health-check probes only; no business endpoints
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+
+kafka:
+  brokers: "kafka.nimbus-prod.svc.cluster.local:9092"
+
+logLevel: info

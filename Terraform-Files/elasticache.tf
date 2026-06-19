@@ -31,6 +31,6 @@ resource "aws_elasticache_cluster" "redis" {
   tags = {
     Name        = "${var.project_name}-redis"
     Environment = var.environment
-    UsedBy      = "catalog-service,cart-service"
+    UsedBy      = "catalog-service cart-service"
   }
 }

@@ -28,7 +28,7 @@ resource "random_password" "db" {
 resource "aws_secretsmanager_secret" "db_password" {
   name                    = "${var.project_name}/${var.environment}/db-password"
   description             = "Master password for the ${var.project_name} RDS PostgreSQL instance"
-  recovery_window_in_days = 0 # 0 = immediate deletion (safe for dev); increase for prod
+  recovery_window_in_days = 7 # 0 = immediate deletion (safe for dev); increase for prod
 
   tags = {
     Name        = "${var.project_name}-db-password"
@@ -63,7 +63,7 @@ resource "aws_db_instance" "main" {
   publicly_accessible = false
 
   # ── Backup / protection ───────────────────
-  backup_retention_period = 7
+  backup_retention_period = 0     # free tier does not support retention > 0
   skip_final_snapshot     = true  # set false for production
   deletion_protection     = false # set true for production
 
