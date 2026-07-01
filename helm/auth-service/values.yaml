@@ -24,6 +24,6 @@ hpa:
   targetCPUUtilizationPercentage: 70
 
 kafka:
-  brokers: "kafka.nimbus-prod.svc.cluster.local:9092"
+  brokers: "nimbus-kafka-kafka-bootstrap.nimbus-prod.svc.cluster.local:9092"
 
 logLevel: info

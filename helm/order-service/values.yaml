@@ -24,7 +24,7 @@ hpa:
   targetCPUUtilizationPercentage: 70
 
 kafka:
-  brokers: "kafka.nimbus-prod.svc.cluster.local:9092"
+  brokers: "nimbus-kafka-kafka-bootstrap.nimbus-prod.svc.cluster.local:9092"
 
 cartServiceUrl: "http://cart-service.nimbus-prod.svc.cluster.local:3003"
 

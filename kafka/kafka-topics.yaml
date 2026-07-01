@@ -1,0 +1,34 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# KAFKA TOPICS
+# Managed by the Strimzi Entity Operator (topicOperator).
+# Mirrors the topics created by the kafka-init container in docker-compose.
+# ─────────────────────────────────────────────────────────────────────────────
+
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: orders-created
+  namespace: nimbus-prod
+  labels:
+    strimzi.io/cluster: nimbus-kafka
+spec:
+  topicName: orders.created   # dot-separated name as used by the services
+  partitions: 1
+  replicas: 1
+  config:
+    retention.ms: "604800000" # 7 days
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: users-registered
+  namespace: nimbus-prod
+  labels:
+    strimzi.io/cluster: nimbus-kafka
+spec:
+  topicName: users.registered
+  partitions: 1
+  replicas: 1
+  config:
+    retention.ms: "604800000" # 7 days

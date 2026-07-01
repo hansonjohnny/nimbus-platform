@@ -1,0 +1,59 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# KAFKA CLUSTER — Strimzi KRaft (no ZooKeeper)
+#
+# Mirrors the docker-compose Kafka setup (apache/kafka:3.8.0, KRaft mode).
+# The Strimzi operator (installed via argocd.tf) reconciles these CRs.
+#
+# Bootstrap address for services:
+#   nimbus-kafka-kafka-bootstrap.nimbus-prod.svc.cluster.local:9092
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Single node pool acting as both controller and broker (dev) ───────────────
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  name: dual-role
+  namespace: nimbus-prod
+  labels:
+    strimzi.io/cluster: nimbus-kafka
+spec:
+  replicas: 1          # increase to 3 for production
+  roles:
+    - controller
+    - broker
+  storage:
+    type: jbod
+    volumes:
+      - id: 0
+        type: persistent-claim
+        size: 10Gi
+        deleteClaim: true
+
+---
+# ── Kafka cluster ─────────────────────────────────────────────────────────────
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: nimbus-kafka
+  namespace: nimbus-prod
+  annotations:
+    strimzi.io/node-pools: enabled
+    strimzi.io/kraft: enabled      # KRaft mode — no ZooKeeper
+spec:
+  kafka:
+    version: 3.8.0
+    metadataVersion: 3.8-IV0
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+    config:
+      offsets.topic.replication.factor: 1
+      transaction.state.log.replication.factor: 1
+      transaction.state.log.min.isr: 1
+      default.replication.factor: 1
+      min.insync.replicas: 1
+      auto.create.topics.enable: "false"  # topics created via KafkaTopic CRs only
+  entityOperator:
+    topicOperator: {}   # required to manage KafkaTopic CRs
