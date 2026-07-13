@@ -738,20 +738,34 @@ aws secretsmanager list-secrets --region us-east-2
 
 ---
 
+## Deployment Status
+
+✅ **Production Infrastructure Deployed** (2026-07-13)
+
+- AWS RDS PostgreSQL 16 Multi-AZ: ✅ Running
+- AWS ElastiCache Redis 7.1: ✅ Running
+- EKS Cluster (1 t3.medium node): ✅ Running
+- ArgoCD (v7.3.4): ✅ Installed
+- Strimzi Kafka Operator (v0.43.0): ✅ Installed
+- Kubernetes Namespaces: ✅ Created (nimbus-prod, argocd, strimzi-system)
+
 ## Files Modified This Session
 
 - ✅ `providers.tf` - Fixed module.eks → aws_eks_cluster.main references
-- ✅ `argocd.tf` - Fixed depends_on = [module.eks] → [aws_eks_node_group.main]
+- ✅ `argocd.tf` - Added kubernetes_namespace.nimbus_prod resource, fixed strimzi depends_on
 - ✅ `backend.tf` - Switched to local backend (S3 backend pending)
 - ✅ `jenkins-shared-library/vars/updateK8sDeployment.groovy` - Updated path to helm/${service}/values.yaml
+- ✅ `README.md` - Comprehensive infrastructure documentation
 
 ---
 
 ## Next Steps
 
-1. **Push to GitHub**: Commit all Terraform changes and push to nimbus-platform main
-2. **Create ArgoCD Application CR**: Add to argocd.tf or create manually via kubectl
-3. **Test End-to-End**: Push a service change → Jenkins → ArgoCD → K8s deployment
-4. **Configure S3 Backend**: Create S3 bucket + DynamoDB table, migrate Terraform state
-5. **Add Monitoring**: Prometheus, Grafana, or CloudWatch for observability
-6. **Add Ingress**: API Gateway or Nginx Ingress for external access
+1. **Push argocd.tf fix to GitHub**: Commit kubernetes_namespace.nimbus_prod addition
+2. **Deploy Kafka Cluster CR**: Apply kafka/kafka-cluster.yaml and kafka/kafka-topics.yaml to K8s
+3. **Create ArgoCD Application CR**: Add to argocd.tf or create manually via kubectl to sync helm/ charts
+4. **Configure K8s Secrets**: Create auth-service-secrets, catalog-service-secrets, etc. with DATABASE_URL, REDIS_URL values
+5. **Test End-to-End**: Push a service change → Jenkins → ArgoCD → K8s deployment
+6. **Configure S3 Backend**: Create S3 bucket + DynamoDB table, migrate Terraform state
+7. **Add Monitoring**: Prometheus, Grafana, or CloudWatch for observability
+8. **Add Ingress**: API Gateway or Nginx Ingress for external access

@@ -8,9 +8,9 @@ resource "aws_dynamodb_table" "tf_lock" {
     type = "S"
   }
 
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
+  lifecycle {
+    prevent_destroy = true
+  }
 
   tags = {
     Name      = var.dynamodb_table_name

@@ -27,6 +27,23 @@ resource "helm_release" "argocd" {
 
 
 # ─────────────────────────────────────────
+# KUBERNETES NAMESPACES
+# ─────────────────────────────────────────
+resource "kubernetes_namespace" "nimbus_prod" {
+  metadata {
+    name = "nimbus-prod"
+
+    labels = {
+      managed_by  = "terraform"
+      environment = "production"
+    }
+  }
+
+  depends_on = [aws_eks_node_group.main]
+}
+
+
+# ─────────────────────────────────────────
 # STRIMZI KAFKA OPERATOR
 # Watches nimbus-prod and manages Kafka
 # clusters declared as Kubernetes CRs
@@ -46,5 +63,5 @@ resource "helm_release" "strimzi" {
     value = "{nimbus-prod}"
   }
 
-  depends_on = [aws_eks_node_group.main]
+  depends_on = [kubernetes_namespace.nimbus_prod]
 }
